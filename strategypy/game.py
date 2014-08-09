@@ -157,3 +157,4 @@ class Game(object):
             self.snapshot_data()
             self.counter += 1
         sys.stdout.write(self.build_json_data())
+      

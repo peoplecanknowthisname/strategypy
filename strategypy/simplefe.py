@@ -6,6 +6,7 @@ if __name__ == "__main__":
     output_dict = json.loads(output)
     winner = output_dict['winner']
     players = output_dict['players']
+    print players
     turns = output_dict['turns']
     initial_frame = output_dict['frames'][0]
     last_frame = output_dict['frames'][-1]
