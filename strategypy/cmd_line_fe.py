@@ -50,4 +50,4 @@ if __name__ == "__main__":
     output = sys.stdin.read()
     output_dict = json.loads(output)
     print_frames(output_dict)
-    priny_final_lines(output_dict)
+    print_final_lines(output_dict)
