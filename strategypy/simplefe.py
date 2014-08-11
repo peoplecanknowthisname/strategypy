@@ -8,11 +8,11 @@ def print_frames(output_dict):
     grid_size = output_dict['grid_size']
 
     empty_grid = [
-        [' '] * grid_size[0]
-        for i in range(grid_size[1])
+        [' '] * grid_size[1]
+        for i in range(grid_size[0])
     ]
     
-    print '-' * (grid_size[0] + 2)
+    print '-' * (grid_size[1] + 2)
     
     for frame in output_dict['frames']:
         grid = copy.deepcopy(empty_grid)
@@ -24,7 +24,7 @@ def print_frames(output_dict):
         for row in grid:
             print '|'+''.join(row)+'|'
         
-        print '-'*(grid_size[0]+2)         
+        print '-'*(grid_size[1]+2)         
 
 
 def print_summary(output_dict):
