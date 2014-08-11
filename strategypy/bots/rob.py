@@ -13,6 +13,7 @@ def weighted_sample(choices, num):
 
     if num == 0:
         return []
+
     choice = weighted_choice(choices)
     choices = [c for c in choices if c[0] != choice]
     return [choice] + weighted_sample(choices, num-1)
@@ -53,7 +54,7 @@ class Bot(BaseBot):
                          (1 * hidden_size) + \
                          (1 * output_size)   # thresholds
 
-    parent_prob = ((0, 0.0), (1, 0.05), (2, 0.7), (3, 0.1))
+    parent_prob = ((0, 0.0), (1, 0.05), (2, 0.85), (3, 0.1))
     num_genes_that_mutate = int(0.0001 * dna_size)
     
     sys.stderr.write('dna size {p} genes that mutate {q}\n'.format(p=dna_size, q=num_genes_that_mutate))
@@ -91,12 +92,12 @@ class Bot(BaseBot):
             try:
                 f = open(self.filename, 'r')
                 self.dna = json.load(f)
-                sys.stderr.write('loaded bot {b}\n'.format(b=self.filename))
+    #            sys.stderr.write('loaded bot {b}\n'.format(b=self.filename))
                 f.close()
             except IOError:
                 self.set_random_dna()
                 f = file(self.filename, 'w')
-                sys.stderr.write('saved bot {b}\n'.format(b=self.filename))
+       #         sys.stderr.write('saved bot {b}\n'.format(b=self.filename))
                 json.dump(list(self.dna), f)
                 f.close()
             
@@ -110,24 +111,35 @@ class Bot(BaseBot):
 
         if num_parents == 0:
             self.set_random_dna()
-            sys.stderr.write('new random\n')
+   #         sys.stderr.write('new random\n')
 
         elif num_parents == 1:
             self.dna = random.choice(self.unit.player.units).bot.dna[:]
-            sys.stderr.write('new clone\n')
+ #           sys.stderr.write('new clone\n')
 
         else:
-            sys.stderr.write('new child {p} parents\n'.format(p=num_parents))
-            self.dna = numpy.zeros((self.dna_size,))        
+#            sys.stderr.write('new child weighted parents {p}\n'.format(p=[(u,u.bot.num_kills) for u in self.unit.player.units]))
 #            parents = random.sample(self.unit.player.units, num_parents)
             parents = weighted_sample([(u,u.bot.num_kills) for u in self.unit.player.units], num_parents)
-            
+ #           for parent in parents:
+  #              sys.stderr.write('new child parent {p} {q}\n'.format(q=len(parent.bot.dna), p=parent))
+                
+            self.dna = []        
             for i in range(self.dna_size):
-                self.dna[i] = random.choice([p.bot.dna[i] for p in parents])
+                try:
+                    doner_parent = random.choice([p for p in parents if p is not self.unit])
+                    self.dna.append(doner_parent.bot.dna[i])
+                except IndexError:
+   #                 sys.stderr.write(' {p} {q}\n'.format(q=len(doner_parent.bot.dna), p=i))
+                    raise
 
-        sys.stderr.write('{p} mutations\n'.format(p=self.num_genes_that_mutate))
+
+
+    #    sys.stderr.write('{p} mutations\n'.format(p=self.num_genes_that_mutate))
         for i in random.sample(range(self.dna_size), self.num_genes_that_mutate):
             self.dna[i] = random.uniform(-1, 1)
+
+        assert 0 not in self.dna
 
 
     def set_random_dna(self):
@@ -145,7 +157,7 @@ class Bot(BaseBot):
             self.net.params[:] = numpy.array(self.dna)
             self.age=0
             f = file(self.filename, 'w')
-            sys.stderr.write('saved bot {b}\n'.format(b=self.filename))
+   #         sys.stderr.write('saved bot {b}\n'.format(b=self.filename))
             json.dump(list(self.dna), f)
             f.close()
        

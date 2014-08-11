@@ -4,7 +4,7 @@ All the settings/constants of the game
 
 GRID_SIZE = (60, 60)
 UNITS = 50
-MAX_TURNS = 500
+MAX_TURNS = 999
 RESPAWN = True
 
 try:
