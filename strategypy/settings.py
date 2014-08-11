@@ -2,9 +2,10 @@
 All the settings/constants of the game
 """
 
-GRID_SIZE = (40, 40)
-UNITS = 10
-MAX_TURNS = 3000
+GRID_SIZE = (60, 60)
+UNITS = 50
+MAX_TURNS = 500
+RESPAWN = True
 
 try:
     from local_settings import *

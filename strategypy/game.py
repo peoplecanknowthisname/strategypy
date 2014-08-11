@@ -4,7 +4,7 @@ import sys
 
 import bots
 import settings
-from components import Player
+from components import Player, Unit
 
 
 class Game(object):
@@ -20,7 +20,7 @@ class Game(object):
         Update the list of the cells currently occupied by units
         """
         # TODO: Optimize by adding add update_occupied_cells instead
-        self.occupied_cells = {unit.current_cell for unit in self.units}
+        self.occupied_cells = set([unit.current_cell for unit in self.units])
 
     def init_players(self):
         """
@@ -40,7 +40,7 @@ class Game(object):
         package/module from the args
         """
         for arg in self.args:
-            __import__('bots.{}'.format(arg))
+            __import__('bots.{package}'.format(package=arg))
         self.bots = [getattr(bots, arg).Bot for arg in self.args]
 
     def snapshot_data(self):
@@ -56,10 +56,10 @@ class Game(object):
         return snapshot
 
     def build_json_data(self):
-        players = {
-            player.pk: player.get_bot_class_module_name()
+        players = dict([
+            (player.pk, player.get_bot_class_module_name())
             for player in self.players
-        }
+        ])
         winner = self.get_winner()
         data = {
             'frames': self.data,
@@ -113,6 +113,13 @@ class Game(object):
                     else:
                         enemies += 1
 
+                        for unit in self.units:
+                            if unit.player.pk == player_pk:
+                                continue
+                            if (unit.x, unit.y) == (ox, oy):
+                                unit.you_killed() 
+                                break
+
             return enemies > allies
 
         def is_outside(x, y):
@@ -131,6 +138,11 @@ class Game(object):
 
         for unit in to_be_removed:
             unit.player.units.remove(unit)
+            unit.you_are_dead()
+
+            if settings.RESPAWN:
+                next_unit_pk = max([u.pk for u in unit.player.units]) + 1
+                unit.player.units.append(Unit(unit.player, next_unit_pk, respawn=True))
 
         to_be_removed = [
             player for player in self.players
@@ -152,6 +164,7 @@ class Game(object):
         self.counter = 0
         winner = None
         while self.counter < settings.MAX_TURNS and winner is None:
+            sys.stderr.write('turn {t}\n'.format(t=self.counter))
             self.update()
             winner = self.get_winner()
             self.snapshot_data()

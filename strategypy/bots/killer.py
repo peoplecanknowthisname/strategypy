@@ -5,8 +5,15 @@ from api import BaseBot
 
 class Bot(BaseBot):
     pray = {}
+    chase_length = 0
 
     def action(self):
+        self.chase_length +=1 
+        if self.chase_length >= 100:
+            self.pray = {}
+            self.chase_length =0 
+
+
         current_frame = self.current_data
         if 'unit' in self.pray and 'player' in self.pray:
             if self.pray['unit'] not in current_frame.get(self.pray['player'], []):
@@ -29,14 +36,14 @@ class Bot(BaseBot):
         dy = y - ty
         if dx == 0:
             direction = 'down' if dy < 0 else 'up'
-            return 'move {}'.format(direction)
+            return 'move {direction}'.format(direction=direction)
         if dy == 0:
             direction = 'right' if dx < 0 else 'left'
-            return 'move {}'.format(direction)
+            return 'move {direction}'.format(direction=direction)
         choice = random.choice(['x', 'y'])
         if choice == 'x':
             direction = 'right' if dx < 0 else 'left'
-            return 'move {}'.format(direction)
+            return 'move {direction}'.format(direction=direction)
         else:
             direction = 'down' if dy < 0 else 'up'
-            return 'move {}'.format(direction)
+            return 'move {direction}'.format(direction=direction)

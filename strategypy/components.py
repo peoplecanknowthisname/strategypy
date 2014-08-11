@@ -11,7 +11,7 @@ class Player(object):
         self.pk = pk
         self.game = game
         self.bot_class = bot_class
-        self.units = [Unit(self, i) for i in xrange(settings.UNITS)]
+        self.units = [Unit(self, i, respawn=False) for i in xrange(settings.UNITS)]
 
     def get_bot_class_module_name(self):
         """
@@ -27,12 +27,12 @@ class Unit(object):
     A single unit controlled by a Player. It's represented
     on the game grid by a small coloured square.
     """
-    def __init__(self, player, pk):
+    def __init__(self, player, pk, respawn):
         self.x = 0
         self.y = 0
         self.player = player
         self.spawn_random()
-        self.bot = player.bot_class(self)
+        self.bot = player.bot_class(self, respawn)
         self.pk = pk
 
     def action(self):
@@ -93,7 +93,7 @@ class Unit(object):
         Move the Unit to a random position on the grid
         """
         X, Y = settings.GRID_SIZE
-        all_cells = {(x, y) for x in xrange(0, X) for y in xrange(0, Y)}
+        all_cells = set([(x, y) for x in xrange(0, X) for y in xrange(0, Y)])
         occupied_cells = self.player.game.occupied_cells
         open_cells = all_cells - occupied_cells
         self.x, self.y = random.sample(open_cells, 1)[0]
@@ -104,3 +104,9 @@ class Unit(object):
     @property
     def current_cell(self):
         return (self.x, self.y)
+
+    def you_are_dead(self):
+        self.bot.you_are_dead()
+
+    def you_killed(self):
+        self.bot.you_killed()

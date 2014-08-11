@@ -6,7 +6,6 @@ if __name__ == "__main__":
     output_dict = json.loads(output)
     winner = output_dict['winner']
     players = output_dict['players']
-    print players
     turns = output_dict['turns']
     initial_frame = output_dict['frames'][0]
     last_frame = output_dict['frames'][-1]
@@ -15,8 +14,8 @@ if __name__ == "__main__":
 
     winner = None if winner is None else players[str(winner)]
     if winner is None:
-        print 'No player won and the game ended in {} turns'.format(turns)
+        print 'No player won and the game ended in {turns} turns'.format(turns=turns)
     else:
-        print 'Player {} won in {} turns'.format(winner, turns)
-    print 'Initial unit count: {}'.format(initial_count)
-    print 'Final unit count: {}'.format(final_count)
+        print 'Player {winner} won in {turns} turns'.format(winner=winner, turns=turns)
+    print 'Initial unit count: {initial_count}'.format(initial_count=initial_count)
+    print 'Final unit count: {final_count}'.format(final_count=final_count)

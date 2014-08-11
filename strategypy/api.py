@@ -7,7 +7,7 @@ class BaseBot(object):
     """
     Base class for all the bots.
     """
-    def __init__(self, unit):
+    def __init__(self, unit, respawn):
         self.__unit__ = unit
         self.__allowed_actions__ = [
             'move up',
@@ -24,6 +24,12 @@ class BaseBot(object):
         in __allowed_actions__.
         """
         raise NotImplementedError
+
+    def you_are_dead(self):
+        pass
+
+    def you_killed(self):
+        pass
 
     @property
     def data(self):
