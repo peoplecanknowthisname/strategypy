@@ -54,7 +54,7 @@ class Bot(BaseBot):
                          (1 * hidden_size) + \
                          (1 * output_size)   # thresholds
 
-    parent_prob = ((0, 0.0), (1, 0.05), (2, 0.85), (3, 0.1))
+    parent_prob = ((0, 0.5), (1, 0.05), (2, 0.85), (3, 0.05))
     num_genes_that_mutate = int(0.0001 * dna_size)
     
     sys.stderr.write('dna size {p} genes that mutate {q}\n'.format(p=dna_size, q=num_genes_that_mutate))
@@ -67,8 +67,9 @@ class Bot(BaseBot):
         None,
     ]
     
-    def __init__(self, *args, **kwargs):
-        super(Bot, self).__init__(*args, **kwargs)
+    def __init__(self, unit, *args, **kwargs):
+        super(Bot, self).__init__(unit, *args, **kwargs)
+        self.unit = unit
         self.num_kills = 0
 
         self.age = 0
@@ -107,8 +108,8 @@ class Bot(BaseBot):
             sys.stderr.write('new clone\n')
 
         else:
-            sys.stderr.write('new child weighted parents {p}\n'.format(p=[(u,u.bot.num_kills) for u in self.unit.player.units]))
             parents = random.sample(self.unit.player.units, num_parents)
+            sys.stderr.write('new child weighted num parents {p}\n'.format(p=len(parents)))
             parents = weighted_sample([(u, 1 + u.bot.num_kills) for u in self.unit.player.units], num_parents)
                 
             self.dna = []        
@@ -127,7 +128,7 @@ class Bot(BaseBot):
           
     def action(self):
 
-        if self.age > self.max_age or self.respawn:
+        if self.age > self.max_age or self.respawned:
             self.set_new_dna()
             self.net.params[:] = numpy.array(self.dna)
             self.age = 0
