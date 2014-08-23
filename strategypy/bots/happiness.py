@@ -23,6 +23,10 @@ from happines_base import Bot as HappinessBaseBot
 
 
 class Bot(HappinessBaseBot):
+
+    MAX_SHELL_OCC = 0.74
+    ENEMY_MUL = 0.5
+    DIST_MUL = 1.
     
 
     def calc_happiness(self, friend_dist, enemy_dist):
@@ -38,13 +42,13 @@ class Bot(HappinessBaseBot):
 
             max_per_shell = 4 * distance
             shell_occupancy = (friend_dist[distance] * 1. / max_per_shell)
-            happiness += min(shell_occupancy, 0.74) / distance
+            happiness += min(shell_occupancy, self.MAX_SHELL_OCC) / (distance * self.DIST_MUL)
 
         # enemiess make me happy, but not as much
         for distance in range(1, 100):
 
             max_per_shell = 4 * distance
             shell_occupancy = (enemy_dist[distance] * 1. / max_per_shell)
-            happiness += 0.5 * min(shell_occupancy, 0.74) / distance
+            happiness += self.ENEMY_MUL * min(shell_occupancy, self.MAX_SHELL_OCC) / (distance * self.DIST_MUL)
         
         return happiness
