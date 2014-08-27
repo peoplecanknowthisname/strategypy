@@ -48,3 +48,14 @@ class Bot(HappinessBaseBot):
             happiness += 0.5 * min(shell_occupancy, 0.74) / distance
         
         return happiness
+
+
+
+
+
+
+
+
+
+
+

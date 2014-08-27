@@ -14,7 +14,7 @@ def print_frames(output_dict):
 
     print '-' * (grid_size[1] + 2)
 
-    for frame in output_dict['frames']:
+    for frame in output_dict['frames'][-1: 0: -1]:
         grid = copy.deepcopy(empty_grid)
         for player_pk in frame:
             for unit_id in frame[player_pk]:
@@ -58,6 +58,11 @@ def print_summary(output_dict):
             print '{} x {}, '.format(killed_player, num_times),
         print
 
+    for player in all_players.values():
+        total_deaths = sum(player['was_killed_by'].values())
+        total_kills = sum(player['has_killed'].values())
+        print 'Player {} killed {} died {} total score {}: '.format(player['name'], total_kills, total_deaths, total_kills-total_deaths)
+        
 
 if __name__ == "__main__":
     parser = OptionParser()

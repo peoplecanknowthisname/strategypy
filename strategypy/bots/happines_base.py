@@ -34,7 +34,13 @@ class Bot(BaseBot):
         pk = ctx['pk']
         x, y = ctx['position']
 
-        distances = deepcopy(self.distance_template)
+        distances = {} #deepcopy(self.distance_template)
+
+        for direction in self.directions:
+            distances[direction] = {}
+            for bot_type in ['friends', 'enemies']:
+                distances[direction][bot_type] = [0] * self.MAX_DIST
+
         for other_player_pk, units in current_frame.items():
             
             if other_player_pk == player_pk:
