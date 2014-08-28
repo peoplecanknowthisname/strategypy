@@ -6,5 +6,5 @@ while [ 1 ]; do
 	git fetch
 	git rebase origin/happiness_evo
 	git push
-	sleep 60
+	sleep 600
 done
