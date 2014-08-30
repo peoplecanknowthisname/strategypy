@@ -97,7 +97,7 @@ class Evolver(object):
         return files
 
     def score_bot(self, wins, killed, was_killed):
-        return (wins * 40 )+ killed - was_killed
+        return ((wins * 40 )+ killed - was_killed * 3) ** 2
 
     def choose_parents(self, parents):
         return weighted_sample(parents, 2)
