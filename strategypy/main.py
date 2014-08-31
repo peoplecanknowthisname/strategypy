@@ -3,7 +3,7 @@ import json
 import shutil
 import random
 import os, errno
-import glob 
+import glob
 import random
 import re
 
@@ -31,9 +31,9 @@ def weighted_sample(choices, num):
     return [choice] + weighted_sample(choices, num-1)
 
 def weighted_choice(choices):
-    
+
     choices = [(c, max(w, 0)) for (c, w) in choices]
-    
+
     total = sum(w for c, w in choices)
     if total <= 0:
         return None
@@ -117,11 +117,11 @@ class Evolver(object):
 
         files = self.rank_bots(filenames)
 
-        parent_files = self.choose_parents(files) 
+        parent_files = self.choose_parents(files)
 
         print 'parent 1', parent_files[0]
         print 'parent 2', parent_files[1]
-        
+
         with open(parent_files[0], 'r') as f:
             dna_1 = json.load(f)
         with open(parent_files[1], 'r') as f:
@@ -154,7 +154,7 @@ class Evolver(object):
                         d = self.get_dna()
 
                     json.dump(d, f)
-                    
+
                 wins, killed, was_killed = self.run_games()
 
                 fn = '{}/happiness_evo_w-{:03d}_s-{:03d}_hk-{:03d}_wk-{:03d}_d0-{}_rand-{}.json'.format(
@@ -175,7 +175,7 @@ class Evolver(object):
             self.gen += 1
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and False:
 
     evo = Evolver(
         dir_root='happiness_dna',
@@ -185,4 +185,9 @@ if __name__ == "__main__":
         game_args = sys.argv[1:],
     )
 
-    evo.go()    
+    evo.go()
+
+if __name__ == "__main__":
+    game = Game(*sys.argv[1:])
+    result = game.main_loop()
+    sys.stdout.write(result)
