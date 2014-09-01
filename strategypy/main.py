@@ -175,7 +175,7 @@ class Evolver(object):
             self.gen += 1
 
 
-if __name__ == "__main__" and False:
+if __name__ == "__main__":
 
     evo = Evolver(
         dir_root='happiness_dna',
@@ -187,7 +187,7 @@ if __name__ == "__main__" and False:
 
     evo.go()
 
-if __name__ == "__main__":
+if __name__ == "__main__" and False:
     game = Game(*sys.argv[1:])
     result = game.main_loop()
     sys.stdout.write(result)
