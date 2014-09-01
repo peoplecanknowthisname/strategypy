@@ -58,7 +58,7 @@ class Evolver(object):
         self.gen = 0
         self.source_dir = None
         self.dest_dir = None
-        self.mutate_amount = 0.05
+        self.mutate_amount = 0.01
 
     def run_games(self):
 
